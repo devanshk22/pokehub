@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "384172336609",
+    "project_id": "pokehub-399e4",
+    "storage_bucket": "pokehub-399e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384172336609:android:a61befa5786f3595029ea0",
+        "android_client_info": {
+          "package_name": "com.devansh.pokehub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384172336609-edlpsoj7c029q5hr203mh59gb2lv29mq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbPhPFEYQDD_pOHIVX5ThOEq1Vik3S34M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384172336609-edlpsoj7c029q5hr203mh59gb2lv29mq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
