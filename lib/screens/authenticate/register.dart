@@ -1,60 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:pokehub/screens/authenticate/text_field_decoration.dart';
-import 'package:pokehub/size_config.dart';
 import 'package:pokehub/services/auth.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+import '../../size_config.dart';
+
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
-  //text field state
+  String name = "";
   String email = "";
   String password = "";
-
+  String confirm_password = "";
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                image: AssetImage("assets/images/Poke_Ball_icon.png"),
-                width: SizeConfig.blockSizeHorizontal * 40,
-                height: SizeConfig.blockSizeHorizontal * 40,
-              ),
-              Text(
-                "PokéHub",
-                style: TextStyle(
-                  fontFamily: "Blinker",
-                  fontSize: SizeConfig.blockSizeHorizontal * 10,
-                  color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.blockSizeVertical * 4,
+                vertical: SizeConfig.blockSizeVertical * 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "PokéHub",
+                      style: TextStyle(
+                        fontFamily: "Blinker",
+                        fontSize: SizeConfig.blockSizeHorizontal * 10,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Image(
+                        image: AssetImage("assets/images/Poke_Ball_icon.png"),
+                        width: SizeConfig.blockSizeHorizontal * 25,
+                        height: SizeConfig.blockSizeHorizontal * 25,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                "Log in to your account",
-                style: TextStyle(
-                  fontFamily: "Blinker",
-                  fontSize: SizeConfig.blockSizeHorizontal * 6,
-                  color: Colors.white,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Join PokéHub today!",
+                    style: TextStyle(
+                      fontFamily: "Blinker",
+                      fontSize: SizeConfig.blockSizeHorizontal * 6,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-              Form(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeVertical * 4,
-                      vertical: SizeConfig.blockSizeVertical * 4),
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2,
+                ),
+                Form(
                   child: Column(
                     children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Name",
+                          style: TextStyle(
+                            fontFamily: "Blinker",
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      TextFormField(
+                        style: input_text_style.copyWith(color: Colors.black),
+                        decoration: decor.copyWith(hintText: "Name"),
+                        onChanged: (val) {
+                          setState(() => name = val);
+                        },
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -71,7 +109,9 @@ class _SignInState extends State<SignIn> {
                       ),
                       TextFormField(
                         style: input_text_style.copyWith(color: Colors.black),
-                        decoration: decor.copyWith(hintText: "Email ID"),
+                        decoration: decor.copyWith(
+                          hintText: "Email ID",
+                        ),
                         onChanged: (val) {
                           setState(() => email = val);
                         },
@@ -106,15 +146,48 @@ class _SignInState extends State<SignIn> {
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Confirm Password",
+                          style: TextStyle(
+                            fontFamily: "Blinker",
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      TextFormField(
+                        style: input_text_style.copyWith(color: Colors.black),
+                        decoration: decor.copyWith(
+                          hintText: "Confirm Password",
+                        ),
+                        obscureText: true,
+                        onChanged: (val) {
+                          setState(() => confirm_password = val);
+                        },
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
                           onPressed: () {
                             print(email);
+                            print(name);
                             print(password);
+                            print(confirm_password);
                           },
                           child: Text(
-                            "Sign In",
+                            "Continue",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: "Blinker",
@@ -133,7 +206,7 @@ class _SignInState extends State<SignIn> {
                           color: Colors.white,
                         )),
                         Text(
-                          "Don't have an account? Sign up today for free!",
+                          "Already have an account? Sign in now!",
                           style: TextStyle(
                             fontFamily: "Blinker",
                             fontSize: SizeConfig.blockSizeHorizontal * 4,
@@ -151,13 +224,9 @@ class _SignInState extends State<SignIn> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.red),
-                          ),
                           onPressed: () {},
                           child: Text(
-                            "Create Account",
+                            "Sign In",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: "Blinker",
@@ -169,9 +238,9 @@ class _SignInState extends State<SignIn> {
                       ),
                     ],
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
