@@ -47,7 +47,7 @@ class _SignInState extends State<SignIn> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.blockSizeVertical * 4,
-                      vertical: SizeConfig.blockSizeVertical * 6),
+                      vertical: SizeConfig.blockSizeVertical * 4),
                   child: Column(
                     children: <Widget>[
                       Align(
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
                         onChanged: (val) {},
                       ),
                       SizedBox(
-                        height: SizeConfig.blockSizeVertical * 4,
+                        height: SizeConfig.blockSizeVertical * 2,
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -93,6 +93,67 @@ class _SignInState extends State<SignIn> {
                         ),
                         obscureText: true,
                         onChanged: (val) {},
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Blinker",
+                              fontSize: SizeConfig.blockSizeHorizontal * 4,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      Row(children: <Widget>[
+                        Expanded(
+                            child: Divider(
+                          color: Colors.white,
+                        )),
+                        Text(
+                          "Don't have an account? Sign up today for free!",
+                          style: TextStyle(
+                            fontFamily: "Blinker",
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Expanded(
+                            child: Divider(
+                          color: Colors.white,
+                        )),
+                      ]),
+                      SizedBox(
+                        height: SizeConfig.blockSizeVertical * 2,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            "Create Account",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Blinker",
+                              fontSize: SizeConfig.blockSizeHorizontal * 4,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
