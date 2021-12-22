@@ -9,17 +9,6 @@ class AuthService {
     return user != null ? UserAccount(uid: user.uid) : null;
   }
 
-  Future signInAnon() async {
-    try {
-      UserCredential result = await _auth.signInAnonymously();
-      User? user = result.user;
-      return _userFromFirebaseUser(user!);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   //auth change user stream
   Stream<UserAccount?> get user {
     return _auth
@@ -28,8 +17,30 @@ class AuthService {
   }
 
   //Sign in with Email and Password
+  Future signIn(String email, String password) async {
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      User user = result.user!;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
   //Register with Email and Password
+  Future createAccount(String email, String password) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User user = result.user!;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
   //Sign Out
   Future signOut() async {

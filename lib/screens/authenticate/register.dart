@@ -5,7 +5,9 @@ import 'package:pokehub/services/auth.dart';
 import '../../size_config.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  late final Function toggleView;
+
+  Register({required this.toggleView});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -13,13 +15,16 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
+  final _formkey = GlobalKey<FormState>();
 
   String name = "";
   String email = "";
   String password = "";
   String confirm_password = "";
+  String error = " ";
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.grey[900],
       body: Center(
@@ -67,6 +72,7 @@ class _RegisterState extends State<Register> {
                   height: SizeConfig.blockSizeVertical * 2,
                 ),
                 Form(
+                  key: _formkey,
                   child: Column(
                     children: <Widget>[
                       Align(
@@ -84,6 +90,8 @@ class _RegisterState extends State<Register> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (val) =>
+                            val!.isEmpty ? 'Please enter a name' : null,
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(hintText: "Name"),
                         onChanged: (val) {
@@ -108,6 +116,8 @@ class _RegisterState extends State<Register> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (val) =>
+                            val!.isEmpty ? 'Please enter an email ID' : null,
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(
                           hintText: "Email ID",
@@ -134,6 +144,9 @@ class _RegisterState extends State<Register> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (val) => val!.length < 8
+                            ? 'Please enter a password with 8 or more characters'
+                            : null,
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(
                           hintText: "Password",
@@ -161,6 +174,15 @@ class _RegisterState extends State<Register> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return "Please confirm password";
+                          } else if (val != password) {
+                            return 'Passwords do not match';
+                          } else {
+                            return null;
+                          }
+                        },
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(
                           hintText: "Confirm Password",
@@ -180,11 +202,16 @@ class _RegisterState extends State<Register> {
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(Colors.red),
                           ),
-                          onPressed: () {
-                            print(email);
-                            print(name);
-                            print(password);
-                            print(confirm_password);
+                          onPressed: () async {
+                            if (_formkey.currentState!.validate()) {
+                              dynamic result =
+                                  await _auth.createAccount(email, password);
+                              if (result == null) {
+                                setState(() {
+                                  error = "Please supply a valid email";
+                                });
+                              }
+                            }
                           },
                           child: Text(
                             "Continue",
@@ -196,6 +223,14 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                         ),
+                      ),
+                      Text(
+                        error,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Blinker",
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.red),
                       ),
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 2,
@@ -224,7 +259,9 @@ class _RegisterState extends State<Register> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            widget.toggleView();
+                          },
                           child: Text(
                             "Sign In",
                             style: TextStyle(

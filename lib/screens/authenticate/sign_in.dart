@@ -4,7 +4,9 @@ import 'package:pokehub/size_config.dart';
 import 'package:pokehub/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  late final Function toggleView;
+
+  SignIn({required this.toggleView});
 
   @override
   _SignInState createState() => _SignInState();
@@ -12,10 +14,12 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
+  final _formkey = GlobalKey<FormState>();
 
   //text field state
   String email = "";
   String password = "";
+  String error = "";
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               Form(
+                key: _formkey,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.blockSizeVertical * 4,
@@ -70,6 +75,8 @@ class _SignInState extends State<SignIn> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter an email ID' : null,
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(hintText: "Email ID"),
                         onChanged: (val) {
@@ -94,6 +101,9 @@ class _SignInState extends State<SignIn> {
                         height: SizeConfig.blockSizeVertical * 2,
                       ),
                       TextFormField(
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter your password'
+                            : null,
                         style: input_text_style.copyWith(color: Colors.black),
                         decoration: decor.copyWith(
                           hintText: "Password",
@@ -109,9 +119,16 @@ class _SignInState extends State<SignIn> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            print(email);
-                            print(password);
+                          onPressed: () async {
+                            if (_formkey.currentState!.validate()) {
+                              dynamic result =
+                                  await _auth.signIn(email, password);
+                              if (result == null) {
+                                setState(() {
+                                  error = "Please supply valid credentials";
+                                });
+                              }
+                            }
                           },
                           child: Text(
                             "Sign In",
@@ -123,6 +140,14 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                         ),
+                      ),
+                      Text(
+                        error,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "Blinker",
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.red),
                       ),
                       SizedBox(
                         height: SizeConfig.blockSizeVertical * 2,
@@ -155,7 +180,9 @@ class _SignInState extends State<SignIn> {
                             backgroundColor:
                                 MaterialStateProperty.all<Color>(Colors.red),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            widget.toggleView();
+                          },
                           child: Text(
                             "Create Account",
                             style: TextStyle(
