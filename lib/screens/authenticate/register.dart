@@ -217,7 +217,8 @@ class _RegisterState extends State<Register> {
                                   if (_formkey.currentState!.validate()) {
                                     setState(() => loading = true);
                                     dynamic result = await _auth.createAccount(
-                                        email, password);
+                                        name, email, password);
+                                    if (!mounted) return;
                                     if (result == null) {
                                       setState(() {
                                         error = "Please supply a valid email";

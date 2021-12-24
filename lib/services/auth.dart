@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pokehub/models/user_account.dart';
+import 'package:pokehub/services/database_control.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,11 +31,14 @@ class AuthService {
   }
 
   //Register with Email and Password
-  Future createAccount(String email, String password) async {
+  Future createAccount(String name, String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user!;
+
+      //create firestore doc for user
+      await DatabaseService(uid: user.uid).initializeUser(name);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
