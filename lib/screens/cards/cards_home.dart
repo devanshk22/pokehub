@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pokehub/screens/cards/card_database.dart';
 import 'package:pokehub/screens/cards/my_cards.dart';
+import 'package:pokehub/screens/cards/set_cards.dart';
+import 'package:pokehub/shared/search_bar.dart';
 import 'package:pokehub/size_config.dart';
+import 'package:pokemon_tcg/pokemon_tcg.dart';
 
 class CardTab extends StatefulWidget {
   const CardTab({Key? key}) : super(key: key);
@@ -11,6 +14,10 @@ class CardTab extends StatefulWidget {
 }
 
 class _CardTabState extends State<CardTab> {
+  final api = PokemonTcgApi(apiKey: '58ad00a8-cb0b-4b71-ae66-7c9829e9b053');
+  late final paginatedCardsAll = PaginatedPokemonCards([], api);
+  int results = 0;
+  String search_term = " ";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,10 +47,59 @@ class _CardTabState extends State<CardTab> {
               ),
             ),
             backgroundColor: Colors.red,
-            body: SafeArea(
-              child: Container(
-                color: Colors.grey[900],
-              ),
+            body: TabBarView(
+              children: [
+                Container(
+                  color: Colors.grey[900],
+                  child: FutureBuilder(
+                    future: api.getSets(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        List<CardSet> sets = snapshot.data as List<CardSet>;
+                        return ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.blockSizeVertical * 0.5),
+                          children: sets
+                              .map((e) => ListTile(
+                                    enabled: true,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SetListView(
+                                                    set: e,
+                                                    num_cards: e.total,
+                                                  )));
+                                    },
+                                    title: Text(
+                                      e.name,
+                                      style: TextStyle(
+                                        fontFamily: "Blinker",
+                                        fontSize:
+                                            SizeConfig.blockSizeHorizontal * 5,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Icon(
+                                      Icons.arrow_forward_ios_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ))
+                              .toList(),
+                        );
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  color: Colors.green,
+                )
+              ],
             ),
           ),
         ),
