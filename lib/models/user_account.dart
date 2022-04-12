@@ -27,7 +27,7 @@ class UserAccount {
     List<String> cards = json['card_collection'].cast<String>();
     List<String> cardwish = json['card_wishlist'].cast<String>();
     List<String> user_decks = json['decks'].cast<String>();
-    userDecks = user_decks.map((e) => jsonDecode(e)).toList();
+    userDecks = user_decks;
     cardCollection = cards;
     cardWishlist = cardwish;
     cardObjects = cardobjs;

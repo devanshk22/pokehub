@@ -3,9 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pokehub/models/deck.dart';
 import 'package:pokehub/models/user_account.dart';
-import 'package:pokehub/screens/cards/pokemon_card_info.dart';
-import 'package:pokehub/screens/decks/decks_home.dart';
-import 'package:pokehub/screens/navbar.dart';
 import 'package:pokehub/services/database_control.dart';
 import 'package:pokehub/shared/search_bar.dart';
 import 'package:pokemon_tcg/pokemon_tcg.dart';
@@ -13,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../size_config.dart';
+import 'deck_view.dart';
 
 class DeckCardSelector extends StatefulWidget {
   String uid;
@@ -170,6 +168,13 @@ class _DeckCardSelectorState extends State<DeckCardSelector> {
                 name: widget.name,
                 deckList: deckCards);
             DatabaseService(uid: widget.uid).updateDecks(deck);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DeckView(
+                          deck: deck,
+                          uid: widget.uid,
+                        )));
           },
           child: Text(
             "Save Deck",
