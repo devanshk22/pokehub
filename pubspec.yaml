@@ -40,6 +40,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   pokemon_tcg: ^1.0.1
   http: ^0.13.4
+  flutter_speed_dial: ^5.0.0+1
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pokehub/models/user_account.dart';
+import 'package:pokehub/services/database_control.dart';
 import 'package:pokehub/size_config.dart';
 import 'package:pokemon_tcg/pokemon_tcg.dart';
+import 'package:provider/provider.dart';
 
 class PokemonCardInfo extends StatefulWidget {
   PokemonCard card;
+  UserAccount user;
 
-  PokemonCardInfo({required this.card});
+  PokemonCardInfo({required this.card, required this.user});
 
   @override
   _PokemonCardInfoState createState() => _PokemonCardInfoState();
@@ -16,6 +22,36 @@ class _PokemonCardInfoState extends State<PokemonCardInfo> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: SpeedDial(
+          backgroundColor: Colors.red,
+          icon: Icons.add,
+          children: [
+            SpeedDialChild(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.add,
+                color: Colors.red,
+              ),
+              label: "Add to Collection",
+              onTap: () async {
+                await DatabaseService(uid: widget.user.uid)
+                    .updateCardCollection(widget.card.id, true);
+              },
+            ),
+            SpeedDialChild(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.star_border,
+                color: Colors.red,
+              ),
+              label: "Add to Wishlist",
+              onTap: () async {
+                await DatabaseService(uid: widget.user.uid)
+                    .updateCardWishlist(widget.card.id, true);
+              },
+            ),
+          ],
+        ),
         backgroundColor: Colors.grey[900],
         appBar: AppBar(
           title: Text(
@@ -354,12 +390,7 @@ class _PokemonCardInfoState extends State<PokemonCardInfo> {
                 ),
               ),
               Text(
-                r"Price Range:  $" +
-                    widget.card.tcgPlayer["prices"]["unlimitedHolofoil"]["high"]
-                        .toString() +
-                    r" - $" +
-                    widget.card.tcgPlayer["prices"]["unlimitedHolofoil"]["low"]
-                        .toString(),
+                getPriceRange(widget.card),
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Blinker',
@@ -367,10 +398,7 @@ class _PokemonCardInfoState extends State<PokemonCardInfo> {
                 ),
               ),
               Text(
-                r"Market Price:  $" +
-                    widget
-                        .card.tcgPlayer["prices"]["unlimitedHolofoil"]["market"]
-                        .toString(),
+                getMarketPrice(widget.card),
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Blinker',
@@ -388,7 +416,6 @@ class _PokemonCardInfoState extends State<PokemonCardInfo> {
   }
 
   List<Widget> getAbilities(PokemonCard card) {
-    print(card.tcgPlayer["prices"]["unlimitedHolofoil"]);
     List<Widget> abilities = [];
     if (card.abilities.isEmpty) {
       return [];
@@ -467,6 +494,39 @@ class _PokemonCardInfoState extends State<PokemonCardInfo> {
         );
       }
       return attacks;
+    }
+  }
+
+  String getPriceRange(PokemonCard card) {
+    print(card.tcgPlayer["prices"]);
+    try {
+      return r"Price Range:  $" +
+          card.tcgPlayer["prices"]["normal"]["low"].toString() +
+          r" - $" +
+          card.tcgPlayer["prices"]["normal"]["high"].toString();
+    } catch (e) {
+      try {
+        return r"Price Range:  $" +
+            card.tcgPlayer["prices"]["holofoil"]["low"].toString() +
+            r" - $" +
+            card.tcgPlayer["prices"]["holofoil"]["high"].toString();
+      } catch (e) {
+        return "Price range: Unavailable";
+      }
+    }
+  }
+
+  String getMarketPrice(PokemonCard card) {
+    try {
+      return r"Market Price:  $" +
+          card.tcgPlayer["prices"]["normal"]["market"].toString();
+    } catch (e) {
+      try {
+        return r"Market Price:  $" +
+            card.tcgPlayer["prices"]["holofoil"]["market"].toString();
+      } catch (e) {
+        return "Market Price: Unavailable";
+      }
     }
   }
 }

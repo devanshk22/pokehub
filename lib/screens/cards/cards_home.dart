@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pokehub/models/user_account.dart';
 import 'package:pokehub/screens/cards/card_database.dart';
 import 'package:pokehub/screens/cards/my_cards.dart';
 import 'package:pokehub/screens/cards/set_cards.dart';
 import 'package:pokehub/shared/search_bar.dart';
 import 'package:pokehub/size_config.dart';
 import 'package:pokemon_tcg/pokemon_tcg.dart';
+import 'package:pokehub/services/database_control.dart';
+import 'package:provider/provider.dart';
 
 class CardTab extends StatefulWidget {
   const CardTab({Key? key}) : super(key: key);
@@ -20,8 +24,8 @@ class _CardTabState extends State<CardTab> {
   String search_term = " ";
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
+    return Scaffold(
+      body: DefaultTabController(
         length: 2,
         child: SafeArea(
           child: Scaffold(
@@ -97,7 +101,7 @@ class _CardTabState extends State<CardTab> {
                   ),
                 ),
                 Container(
-                  color: Colors.green,
+                  child: MyCards(),
                 )
               ],
             ),

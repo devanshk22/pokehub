@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pokehub/screens/decks/decks_home.dart';
+import 'package:pokehub/screens/navbar.dart';
 import 'package:pokehub/screens/wrapper.dart';
 import 'package:pokehub/services/auth.dart';
 import 'package:provider/provider.dart';

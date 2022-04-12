@@ -38,7 +38,7 @@ class AuthService {
       User user = result.user!;
 
       //create firestore doc for user
-      await DatabaseService(uid: user.uid).initializeUser(name);
+      await DatabaseService(uid: user.uid).initializeUser(name, email);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

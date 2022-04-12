@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pokehub/models/user_account.dart';
 import 'package:pokehub/screens/cards/pokemon_card_info.dart';
 import 'package:pokehub/shared/search_bar.dart';
 import 'package:pokehub/size_config.dart';
 import 'package:pokemon_tcg/pokemon_tcg.dart';
+import 'package:provider/provider.dart';
 
 class SetListView extends StatefulWidget {
   CardSet set;
@@ -18,6 +21,7 @@ class _SetListViewState extends State<SetListView> {
   late final paginatedCardsAll = PaginatedPokemonCards([], api);
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserAccount>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[900],
@@ -38,7 +42,6 @@ class _SetListViewState extends State<SetListView> {
           color: Colors.grey[900],
           child: Column(
             children: [
-              SearchBar(),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 3,
@@ -99,15 +102,15 @@ class _SetListViewState extends State<SetListView> {
                             onTap: () {
                               PokemonCard card = set_cards[index];
                               if (card.supertype.type == 'Pokémon') {
-                                print(card.weaknesses);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => PokemonCardInfo(
                                               card: set_cards[index],
+                                              user: user,
                                             )));
-                              } else if (card.supertype == 'Trainer') {
-                              } else if (card.supertype == 'Energy') {}
+                              } else if (card.supertype.type == 'Trainer') {
+                              } else if (card.supertype.type == 'Energy') {}
                             },
                             child: Card(
                               child: Hero(
